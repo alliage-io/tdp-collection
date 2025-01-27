@@ -1,0 +1,15 @@
+# Copyright 2022 TOSIT.IO
+# SPDX-License-Identifier: Apache-2.0
+
+---
+- name: Start worker
+  ansible.builtin.shell: |
+    /opt/tdp/alluxio/bin/alluxio-start.sh -a worker Mount
+    
+- name: Start job_worker
+  ansible.builtin.shell: |
+    /opt/tdp/alluxio/bin/alluxio-start.sh -a job_worker 
+        
+- name: Start proxy
+  ansible.builtin.shell: |
+    /opt/tdp/alluxio/bin/alluxio-start.sh -a proxy

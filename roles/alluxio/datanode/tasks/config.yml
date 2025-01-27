@@ -1,0 +1,12 @@
+# Copyright 2022 TOSIT.IO
+# SPDX-License-Identifier: Apache-2.0
+
+--- 
+- name: Template alluxio-site
+  ansible.builtin.template:
+    src: alluxio-site.properties.j2
+    dest: "{{ alluxio_conf_dir }}/alluxio-site.properties"
+    group: root
+    owner: root
+    mode: "755"
+

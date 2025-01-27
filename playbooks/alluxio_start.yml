@@ -1,0 +1,22 @@
+
+---
+- name: Alluxio Start Journal Node
+  hosts: alluxio_nn
+  tasks:
+    - tosit.tdp.resolve: # noqa unnamed-task
+        node_name: alluxio_nn
+    - name: Start Alluxio Master
+      ansible.builtin.import_role:
+        name: tosit.tdp.alluxio.namenode
+        tasks_from: start
+    - ansible.builtin.meta: clear_facts # noqa unnamed-task
+- name: Alluxio Start Namenode 
+  hosts: alluxio_dn
+  tasks:
+    - tosit.tdp.resolve: # noqa unnamed-task
+        node_name: alluxio_dn
+    - name: Start Alluxio Worker
+      ansible.builtin.import_role:
+        name: tosit.tdp.alluxio.datanode
+        tasks_from: start
+    - ansible.builtin.meta: clear_facts # noqa unnamed-task

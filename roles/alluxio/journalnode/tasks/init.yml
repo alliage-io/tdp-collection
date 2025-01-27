@@ -1,0 +1,14 @@
+# Copyright 2022 TOSIT.IO
+# SPDX-License-Identifier: Apache-2.0
+
+---
+- name: Kinit for hdfs
+  ansible.builtin.command: kinit -kt /etc/security/keytabs/hdfs.headless.keytab {{ hdfs_headless_principal }}@{{ realm }}
+
+- name: Format Journal Master
+  ansible.builtin.shell: |
+    /opt/tdp/alluxio/bin/alluxio formatJournal
+
+- name: Kinit for hdfs
+  ansible.builtin.command: kdestroy
+

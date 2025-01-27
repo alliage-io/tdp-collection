@@ -1,0 +1,38 @@
+# Copyright 2022 TOSIT.IO
+# SPDX-License-Identifier: Apache-2.0
+
+---
+- name: Upload {{ alluxio_dist_file }}
+  ansible.builtin.copy:
+    src: "{{ binaries_local_dir }}/{{ alluxio_dist_file }}"
+    dest: "{{ binaries_upload_dir }}/{{ alluxio_dist_file }}"
+    group: root
+    owner: root
+    mode: "644"
+  diff: false
+
+- name: Ensure {{ alluxio_root_dir }} exists
+  ansible.builtin.file:
+    path: "{{ alluxio_root_dir }}"
+    state: directory
+    group: root
+    owner: root
+    mode: "755"
+
+- name: Extract {{ alluxio_dist_file }}
+  ansible.builtin.unarchive:
+    src: "{{ binaries_upload_dir }}/{{ alluxio_dist_file }}"
+    dest: "{{ alluxio_root_dir }}"
+    group: root
+    owner: root
+    mode: "755"
+    remote_src: true
+    creates: "{{ alluxio_root_dir }}/{{ alluxio_release }}"
+
+- name: Create symbolic link to Hadoop installation
+  ansible.builtin.file:
+    src: "{{ alluxio_root_dir }}/{{ alluxio_release }}"
+    dest: "{{ alluxio_install_dir }}"
+    state: link
+
+  

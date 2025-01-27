@@ -1,0 +1,14 @@
+# Copyright 2022 TOSIT.IO
+# SPDX-License-Identifier: Apache-2.0
+
+---
+- name: Alluxio client install
+  hosts: alluxio_cluster
+  tasks:
+    - tosit.tdp.resolve: # noqa unnamed-task
+        node_name: alluxio_cluster
+    - name: Install alluxio client
+      ansible.builtin.import_role:
+        name: tosit.tdp.alluxio.common
+        tasks_from: install
+    - ansible.builtin.meta: clear_facts # noqa unnamed-task

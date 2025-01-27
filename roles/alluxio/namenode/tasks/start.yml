@@ -1,0 +1,15 @@
+# Copyright 2022 TOSIT.IO
+# SPDX-License-Identifier: Apache-2.0
+
+---
+- name: Start master
+  ansible.builtin.shell: |
+    /opt/tdp/alluxio/bin/alluxio-start.sh -a master
+
+- name: Start job_master
+  ansible.builtin.shell: |
+    /opt/tdp/alluxio/bin/alluxio-start.sh -a job_master
+    
+- name: Start proxy
+  ansible.builtin.shell: |
+    /opt/tdp/alluxio/bin/alluxio-start.sh -a proxy
