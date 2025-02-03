@@ -2,6 +2,12 @@
 # SPDX-License-Identifier: Apache-2.0
 
 ---
+- name: Check if /ramdisk/alluxioworker exists and create if not
+  ansible.builtin.file:
+    path: /mnt/ramdisk/alluxioworker
+    state: directory
+    mode: '0755'
+
 - name: Format worker
   ansible.builtin.shell: |
     /opt/tdp/alluxio/bin/alluxio formatWorker
