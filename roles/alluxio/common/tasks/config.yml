@@ -37,3 +37,11 @@
     group: root
     owner: root
     mode: "755"
+
+- name: Import Alluxio conf into Hadoop core-site 
+  ansible.builtin.blockinfile:
+    path: "{{ alluxio_conf_dir }}/core-site.xml"
+    insertbefore: "</configuration>"
+    block: |
+      {{ lookup('template', 'core-site.xml.j2') }}
+
