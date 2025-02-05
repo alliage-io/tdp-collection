@@ -2,6 +2,13 @@
 # SPDX-License-Identifier: Apache-2.0
 
 ---
+- name: Ensure hbase user exists
+  ansible.builtin.include_role:
+    name: tosit.tdp.utils.user
+  vars:
+    user: "{{ alluxio_user }}"
+    group: "{{ hadoop_group }}"
+
 - name: Upload {{ alluxio_dist_file }}
   ansible.builtin.copy:
     src: "{{ binaries_local_dir }}/{{ alluxio_dist_file }}"
