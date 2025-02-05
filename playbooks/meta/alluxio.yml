@@ -12,3 +12,4 @@
 - ansible.builtin.import_playbook: ../alluxio_init_namenode.yml
 - ansible.builtin.import_playbook: ../alluxio_start.yml
 # - ansible.builtin.import_playbook: ../alluxio_mount_hdfs.yml
+- ansible.builtin.import_playbook: ../alluxio_mount_hdfs.yml

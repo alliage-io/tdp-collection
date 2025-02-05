@@ -9,6 +9,8 @@ alluxio_release: "alluxio-2.9.6-noHelm"
 # alluxio_release: "{{ alluxio_name }}-{{ alluxio_release }}-noHelm-bin"
 alluxio_dist_file: "{{ alluxio_release }}-bin.tar.gz"
 
+hadoop_version: 3.1.1
+
 alluxio_root_dir: "{{ tdp_root_dir }}"
 alluxio_install_dir: "{{ alluxio_root_dir }}/alluxio"
 
@@ -20,9 +22,8 @@ alluxio_group: hadoop
 hadoop_conf_dir: /etc/hadoop/conf
 
 alluxio_env:
-  ALLUXIO_JAVA_OPTS: "'-Djava.security.krb5.realm=REALM.TDP -Djava.security.krb5.kdc={{ groups['alluxio_nn'][0] }}.tdp -Djava.library.path=/opt/tdp/hadoop/lib/native'"
-  ALLUXIO_MASTER_MOUNT_TABLE_ROOT_UFS: '"hdfs://mycluster/alluxio/data"'
   ALLUXIO_JAVA_OPTS: "'-Djava.security.krb5.realm=REALM.TDP -Djava.security.krb5.kdc={{ groups['alluxio_nn'][0] }}.tdp -Djava.library.pathtrue=/opt/tdp/hadoop/lib/native -Dsun.security.krb5.debug=true'"
+#  ALLUXIO_MASTER_MOUNT_TABLE_ROOT_UFS: '"hdfs://mycluster/alluxio/data"'
 
 zookeeper_server_client_port: 2181
 zookeeper_client_quorum: |
@@ -35,30 +36,39 @@ zookeeper_client_quorum: |
 user_node_alluxio_site:
   alluxio.user.hostname: "{{ inventory_hostname }}.{{ domain }}"
   alluxio.underfs.hdfs.configuration: /opt/tdp/alluxio/conf/core-site.xml:/opt/tdp/alluxio/conf/hdfs-site.xml
-  alluxio.master.mount.table.root.ufs: hdfs://mycluster/alluxio/data
-  alluxio.underfs.hdfs.remote: True
+#  alluxio.master.mount.table.root.ufs: hdfs://mycluster/alluxio/data
+  alluxio.underfs.hdfs.remote: "true"
   alluxio.underfs.version: 3.1.1
-  alluxio.web.ui.enabled: True
-  alluxio.zookeeper.enabled: True
+  alluxio.web.ui.enabled: "true"
+  alluxio.zookeeper.enabled: "true"
   alluxio.zookeeper.address: "{{ zookeeper_client_quorum }}"
   alluxio.master.keytab.file: /etc/security/keytabs/hdfs.headless.keytab
   alluxio.master.principal: "{{ hdfs_headless_principal }}@{{ realm }}"
   alluxio.worker.keytab.file: /etc/security/keytabs/hdfs.headless.keytab
   alluxio.worker.principal: "{{ hdfs_headless_principal }}@{{ realm }}"
-  alluxio.master.security.impersonation.client.users: tdp_user
+#  alluxio.security.login.username: tdp_user
+  alluxio.security.login.impersonation.username: '_HDFS_USER_'
+  alluxio.master.security.impersonation.tdp_user.users: '*'
+  alluxio.master.security.impersonation.tdp_user.groups: '*'
+  alluxio.master.security.impersonation.alluxiohdfs.users: '*'
+  alluxio.master.security.impersonation.alluxiohdfs.groups: '*'
   alluxio.security.authorization.capability.enabled: true
+  alluxio.security.authorization.permission.enabled: true
 
 namenode_alluxio_site:
   alluxio.master.hostname: "{{ inventory_hostname }}.{{ domain }}"
-  alluxio.master.mount.table.root.ufs: hdfs://mycluster/alluxio/data
   alluxio.underfs.type: hdfs
   alluxio.underfs.version: 3.1.1
-  alluxio.master.mount.table.root.option.alluxio.underfs.version: 3.1.1
-  alluxio.master.mount.table.root.option.alluxio.underfs.hdfs.configuration: /etc/hadoop/conf/core-site.xml:/etc/hadoop/conf/hdfs-site.xml
+#  alluxio.master.mount.table.root.ufs: hdfs://mycluster/alluxio/data
+#  alluxio.master.mount.table.root.option.alluxio.underfs.version: 3.1.1
+#  alluxio.master.mount.table.root.option.alluxio.underfs.hdfs.configuration: /etc/hadoop/conf/core-site.xml:/etc/hadoop/conf/hdfs-site.xml
+#  alluxio.master.mount.table.root.option.alluxio.security.underfs.hdfs.kerberos.client.principal: "{{ alluxio_principal }}"
+#  alluxio.master.mount.table.root.option.alluxio.security.underfs.hdfs.kerberos.client.keytab.file: /etc/security/keytabs/alluxiohdfs.keytab
+#  alluxio.master.mount.table.root.option.alluxio.security.underfs.hdfs.impersonation.enabled: false
   alluxio.underfs.hdfs.configuration: /opt/tdp/alluxio/conf/core-site.xml:/opt/tdp/alluxio/conf/hdfs-site.xml
-  alluxio.underfs.hdfs.remote: True
-  alluxio.web.ui.enabled: True
-  alluxio.zookeeper.enabled: True
+  alluxio.underfs.hdfs.remote: "true"
+  alluxio.web.ui.enabled: "true"
+  alluxio.zookeeper.enabled: "true"
   alluxio.zookeeper.address: "{{ zookeeper_client_quorum }}"
   alluxio.master.journal.type: UFS
   alluxio.master.journal.folder: hdfs://mycluster/alluxio/journal/
@@ -72,35 +82,41 @@ namenode_alluxio_site:
   alluxio.master.rpc.port: 19998
   alluxio.master.web.port: 19999
   alluxio.proxy.web.port: 39999
+  alluxio.security.login.impersonation.username: '_HDFS_USER_'
+  alluxio.master.security.impersonation.tdp_user.users: '*'
+  alluxio.master.security.impersonation.tdp_user.groups: '*'
+  alluxio.security.authorization.capability.enabled: true
+  alluxio.security.authorization.permission.enabled: true
   
 datanode_alluxio_site:
   alluxio.worker.hostname: "{{ inventory_hostname }}.{{ domain }}"
   alluxio.underfs.hdfs.configuration: /opt/tdp/alluxio/conf/core-site.xml:/opt/tdp/alluxio/conf/hdfs-site.xml
   alluxio.underfs.type: hdfs
   alluxio.underfs.version: 3.1.1
-  alluxio.master.mount.table.root.ufs: hdfs://mycluster/alluxio/data
-  alluxio.master.mount.table.root.option.alluxio.underfs.version: 3.1.1
-  alluxio.underfs.hdfs.remote: True
-  alluxio.web.ui.enabled: True
-  alluxio.zookeeper.enabled: True
+  alluxio.underfs.hdfs.remote: "true"
+  alluxio.web.ui.enabled: "true"
+  alluxio.zookeeper.enabled: "true"
   alluxio.zookeeper.address: "{{ zookeeper_client_quorum }}"
   alluxio.master.keytab.file: /etc/security/keytabs/hdfs.headless.keytab
   alluxio.master.principal: "{{ hdfs_headless_principal }}@{{ realm }}"
   alluxio.worker.keytab.file: /etc/security/keytabs/hdfs.headless.keytab
   alluxio.worker.principal: "{{ hdfs_headless_principal }}@{{ realm }}"
-  alluxio.master.security.impersonation.root.users: '*'
   alluxio.job.master.web.port: 19999
   alluxio.worker.rpc.port: 29999
   alluxio.worker.web.port: 30000
   alluxio.job.worker.rpc.port: 30001
   alluxio.job.worker.web.port: 30003
+  alluxio.security.login.impersonation.username: '_HDFS_USER_'
+  alluxio.master.security.impersonation.tdp_user.users: '*'
+  alluxio.master.security.impersonation.tdp_user.groups: '*'
   alluxio.security.authorization.capability.enabled: true
+  alluxio.security.authorization.permission.enabled: true
 
-core-site:
-  hadoop.proxyuser.root.users: alluxio
-  hadoop.proxyuser.root.groups: alluxio
-  alluxio.zookeeper.enabled: True
+alluxio_core_site:
+  alluxio.zookeeper.enabled: "true"
   alluxio.zookeeper.address: "{{ zookeeper_client_quorum }}"
-  
+  hadoop.proxyuser.alluxiohdfs.hosts: "*"
+  hadoop.proxyuser.alluxiohdfs.groups: "*"
+
 krb_create_principals_keytabs: true
 alluxio_principal: alluxiohdfs@{{ realm }}

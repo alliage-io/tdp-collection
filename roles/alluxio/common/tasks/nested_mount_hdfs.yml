@@ -1,0 +1,28 @@
+
+
+---
+- name: Creating Alluxio Mount Point
+  become_user: root
+  ansible.builtin.shell: |
+    {{ alluxio_root_dir }}/alluxio/bin/alluxio fs mkdir /tdp_user
+
+- name: Alluxio owner Mount Point
+  become_user: root
+  ansible.builtin.shell: |
+    {{ alluxio_root_dir }}/alluxio/bin/alluxio fs chown tdp_user /tdp_user
+
+- name: Alluxio group Mount Point
+  become_user: root
+  ansible.builtin.shell: |
+    {{ alluxio_root_dir }}/alluxio/bin/alluxio fs chgrp tdp_user /tdp_user
+
+- name: Mounting HDFS UFS
+  become_user: tdp_user
+  ansible.builtin.shell: |
+    {{ alluxio_root_dir }}/alluxio/bin/alluxio fs mount \
+    --option alluxio.underfs.hdfs.version={{ hadoop_version }} \
+    --option alluxio.underfs.hdfs.configuration={{ alluxio_conf_dir }}/core-site.xml:{{ alluxio_conf_dir }}/hdfs-site.xml \
+    --option alluxio.security.underfs.hdfs.kerberos.client.principal={{ alluxio_principal }} \
+    --option alluxio.security.underfs.hdfs.kerberos.client.keytab.file=/etc/security/keytabs/alluxiohdfs.keytab \
+    --option alluxio.security.underfs.hdfs.impersonation.enabled=true \
+    /tdp_user/hdfs31-secure/ hdfs://mycluster/user/tdp_user
