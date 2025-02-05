@@ -22,6 +22,7 @@ hadoop_conf_dir: /etc/hadoop/conf
 alluxio_env:
   ALLUXIO_JAVA_OPTS: "'-Djava.security.krb5.realm=REALM.TDP -Djava.security.krb5.kdc={{ groups['alluxio_nn'][0] }}.tdp -Djava.library.path=/opt/tdp/hadoop/lib/native'"
   ALLUXIO_MASTER_MOUNT_TABLE_ROOT_UFS: '"hdfs://mycluster/alluxio/data"'
+  ALLUXIO_JAVA_OPTS: "'-Djava.security.krb5.realm=REALM.TDP -Djava.security.krb5.kdc={{ groups['alluxio_nn'][0] }}.tdp -Djava.library.pathtrue=/opt/tdp/hadoop/lib/native -Dsun.security.krb5.debug=true'"
 
 zookeeper_server_client_port: 2181
 zookeeper_client_quorum: |
@@ -101,3 +102,5 @@ core-site:
   alluxio.zookeeper.enabled: True
   alluxio.zookeeper.address: "{{ zookeeper_client_quorum }}"
   
+krb_create_principals_keytabs: true
+alluxio_principal: alluxiohdfs@{{ realm }}

@@ -84,6 +84,7 @@ mapred_headless_principal: mapred
 hbase_headless_principal: hbase
 hive_headless_principal: hive
 spark_headless_principal: spark
+alluxio_headless_principal: alluxio
 
 # SSL Keystore and Truststore
 hadoop_keystore_location: /etc/ssl/certs/keystore.jks

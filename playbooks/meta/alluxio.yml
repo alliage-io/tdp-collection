@@ -3,6 +3,7 @@
 
 ---
 - ansible.builtin.import_playbook: ../alluxio_client_install.yml
+- ansible.builtin.import_playbook: ../alluxio_kerberos_install.yml
 - ansible.builtin.import_playbook: ../alluxio_config.yml
 - ansible.builtin.import_playbook: ../alluxio_client_config.yml
 - ansible.builtin.import_playbook: ../alluxio_namenode_config.yml

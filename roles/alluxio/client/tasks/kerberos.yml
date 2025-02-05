@@ -1,0 +1,32 @@
+# Copyright 2022 TOSIT.IO
+# SPDX-License-Identifier: Apache-2.0
+
+---
+- name: Ensure common kerberos installation tasks are performed
+  ansible.builtin.import_role:
+    name: tosit.tdp.utils.kerberos
+    tasks_from: install
+
+- name: Ensure yarn user's principal and keytab exist
+  ansible.builtin.import_role:
+    name: tosit.tdp.utils.kerberos
+    tasks_from: create_headless_principal_keytab
+  vars:
+    principal: "{{ alluxio_principal }}"
+    keytab: alluxiohdfs.keytab
+    user: "{{ alluxio_user }}"
+    group: "{{ hadoop_group }}"
+    mode: "0600"
+  when: krb_create_principals_keytabs
+
+- name: Ensure yarn user's keytab is working
+  ansible.builtin.import_role:
+    name: tosit.tdp.utils.kerberos
+    tasks_from: check_secure_keytab
+  vars:
+    principal: "{{ alluxio_principal }}"
+    keytab: alluxiohdfs.keytab
+    user: "{{ alluxio_user }}"
+    group: "{{ hadoop_group }}"
+    mode: "0600"
+  when: not krb_create_principals_keytabs
