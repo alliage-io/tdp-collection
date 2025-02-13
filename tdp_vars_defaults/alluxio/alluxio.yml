@@ -72,7 +72,6 @@ namenode_alluxio_site:
   alluxio.zookeeper.address: "{{ zookeeper_client_quorum }}"
   alluxio.master.journal.type: UFS
   alluxio.master.journal.folder: hdfs://mycluster/alluxio/journal/
-  alluxio.job.master.web.port: 19999
   alluxio.master.keytab.file: /etc/security/keytabs/hdfs.headless.keytab
   alluxio.master.principal: "{{ hdfs_headless_principal }}@{{ realm }}"
   alluxio.worker.keytab.file: /etc/security/keytabs/hdfs.headless.keytab
@@ -101,7 +100,6 @@ datanode_alluxio_site:
   alluxio.master.principal: "{{ hdfs_headless_principal }}@{{ realm }}"
   alluxio.worker.keytab.file: /etc/security/keytabs/hdfs.headless.keytab
   alluxio.worker.principal: "{{ hdfs_headless_principal }}@{{ realm }}"
-  alluxio.job.master.web.port: 19999
   alluxio.worker.rpc.port: 29999
   alluxio.worker.web.port: 30000
   alluxio.job.worker.rpc.port: 30001
